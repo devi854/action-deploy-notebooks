@@ -28,7 +28,7 @@ inputs:
     description: Folder in the workspace to deploy to
   databricks-cli-version:
     description: Version of the databricks CLI to install
-    default: 0.235.0
+    default: 0.221.1
 runs:
   using: "composite"
   steps:
