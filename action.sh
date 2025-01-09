@@ -14,7 +14,7 @@ then
             -d "client_id=$CLIENT_ID" \
             -d "client_secret=$CLIENT_SECRET" \
             -d "grant_type=client_credentials" \
-            -d "scope=542520b1-f39b-41c7-b8ae-08a0c7279c5d%2F.default" \
+            -d "scope=2ff814a6-3304-4ab8-85cb-cd0e6f879c1d%2F.default" \
             --no-progress-meter \
             "https://login.microsoftonline.com/ede58b21-37a8-4b40-b1ed-3b62f51309af/oauth2/v2.0/token" \
             | jq -r '.access_token'
