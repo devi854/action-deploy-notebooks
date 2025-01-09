@@ -1,0 +1,67 @@
+name: Deploy notebooks action
+description: Deploy notebooks and resources into Databricks
+inputs:
+  client-id:
+    description: Service Principal client ID
+  client-secret:
+    description: Service Principal client secret
+  databricks-host:
+    description: Workspace URL
+    required: true
+  databricks-token:
+    description: Databricks access token
+  notebooks-source-dir:
+    description: Folder that contains the notebooks to deploy to the Workspace
+    default: notebooks
+  notebooks-target-dir:
+    description: Folder in the workspace to deploy to
+    default: /Code/${{ github.repository }}
+  resources-source-dir:
+    description: Folder that contains resource files to deploy to DBFS
+    default: resources
+  resources-target-dir:
+    description: Folder in DBFS to deploy to
+    default: dbfs:/FileStore/${{ github.repository }}
+  init-scripts-source-dir:
+    description: Folder that contains init scripts to deploy to the workspace
+  init-scripts-target-dir:
+    description: Folder in the workspace to deploy to
+  databricks-cli-version:
+    description: Version of the databricks CLI to install
+    default: 0.235.0
+runs:
+  using: "composite"
+  steps:
+    - name: Is databricks-cli installed?
+      shell: bash
+      id: check-databricks-cli
+      run: |
+        if ! command -v databricks &> /dev/null; then
+        echo "is_installed=false" >> "GITHUB_OUTPUT"
+        else
+        echo "is_installed=true" >> "$GITHUB_OUTPUT"
+        fi
+    - name: Install databricks-cli
+      if: ${{ steps.check-databricks-cli.outputs.is_installed == 'false' }}
+      uses: databricks/setup-cli@main
+      with:
+        version: ${{ inputs.databricks-cli-version }}
+    - name: Set Github Path
+      run: echo "$GITHUB_ACTION_PATH" >> $GITHUB_PATH
+      shell: bash
+      env:
+        GITHUB_ACTION_PATH: ${{ github.action_path }}
+    - name: Deploy resources
+      run: action.sh
+      shell: bash
+      env:
+        CLIENT_ID: ${{ inputs.client-id }}
+        CLIENT_SECRET: ${{ inputs.client-secrets }}
+        DATABRICKS_HOST: ${{ inputs.databricks-host }}
+        DATABRICKS_TOKEN: ${{ inputs.databricks-token }}
+        NOTEBOOKS_SOURCE_DIR: ${{ inputs.notebooks-source-dir }}
+        NOTEBOOKS_TARGET_DIR: ${{ inputs.notebooks-target-dir }}
+        RESOURCES_SOURCE_DIR: ${{ inputs.resources-source-dir }}
+        RESOURCES_TARGET_DIR: ${{ inputs.resources-target-dir }}
+        INIT_SCRIPT_SOURCE_DIR: ${{ inputs.init-scripts-source-dir }}
+        INIT_SCRIPT_TARGET_DIR: ${{ inputs.init-scripts-target-dir }}

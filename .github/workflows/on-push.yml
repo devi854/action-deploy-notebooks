@@ -1,0 +1,46 @@
+name: on-push
+on:
+  push:
+    branches-ignore:
+      - v*
+
+jobs:
+  test_notebooks_resources_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: shellcheck action.sh
+      - name: Test with datahricks token
+        uses: ./
+        with:
+          databricks-host: https://adb-361260095235730.10.azuredatabricks.net
+          databricks-token: ${{ secrets.DATABRICKS_TOKEN }}
+      - name: Test with empty source dirs
+        uses: ./
+        with:
+          databricks-host: https://adb-361260095235730.10.azuredatabricks.net
+          databricks-token: ${{ secrets.DATABRICKS_TOKEN }}
+          notebooks-source-dir: ""
+      - name: Test with service principal
+        uses: ./
+        with:
+          client-id: f44812de-101a-43ca-b2e7-9aa6542cc65c
+          client-secret: ${{ secrets.CLIENT_SECRET_DEV }}
+          databricks-host: https://adb-361260095235730.10.azuredatabricks.net
+  test_init_scripts_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: prepare dummy init scripts
+        run: |
+          mkdir -p init-scripts
+          echo "echo 'Hello world!'" > init-scripts/hello.sh
+      - name: Test init scripts deploy
+        uses: ./
+        with:
+          databricks-host: https://adb-361260095235730.10.azuredatabricks.net
+          databricks-token: ${{ secrets.DATABRICKS_TOKEN }}
+          notebooks-source-dir: ""
+          resources-source-dir: ""
+          init-scripts-source-dir: ""
+          init-scripts-target-dir: /InitScripts/${{ github.repository }}
