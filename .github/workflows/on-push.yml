@@ -10,6 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: shellcheck action.sh
+      - name: Give execute permission to action.sh
+        run: chmod +x ./action.sh
       - name: Test with datahricks token
         uses: ./
         with:
