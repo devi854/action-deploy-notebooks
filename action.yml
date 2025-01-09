@@ -56,7 +56,7 @@ runs:
       shell: bash
       env:
         CLIENT_ID: ${{ inputs.client-id }}
-        CLIENT_SECRET: ${{ inputs.client-secrets }}
+        CLIENT_SECRET: ${{ inputs.client-secret }}
         DATABRICKS_HOST: ${{ inputs.databricks-host }}
         DATABRICKS_TOKEN: ${{ inputs.databricks-token }}
         NOTEBOOKS_SOURCE_DIR: ${{ inputs.notebooks-source-dir }}
