@@ -60,7 +60,7 @@ then
         abort "resources-target-dir must be more specific"
     fi
 
-    if [ ! d "$RESOURCES_SOURCE_DIR" ]
+    if [ ! -d "$RESOURCES_SOURCE_DIR" ]
     then
         abort "resources-source-dir does not exist; no resources will be copied"
     fi
