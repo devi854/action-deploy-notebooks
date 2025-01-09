@@ -45,7 +45,7 @@ then
     databricks workspace mkdirs "$NOTEBOOKS_TARGET_DIR" || exist 1
 
     # import notebooks to workspace folder
-    databricks workspace import-dir "$NOTEBOOKS_SOURCE_DIR" $NOTEBOOKS_TARGET_DIR" || exit 1
+    databricks workspace import-dir "$NOTEBOOKS_SOURCE_DIR" "$NOTEBOOKS_TARGET_DIR" || exit 1
     echo "Deploying notebooks - done"
 else
     echo "notebooks-source-dir not set"
