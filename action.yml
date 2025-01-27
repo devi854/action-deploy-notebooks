@@ -51,8 +51,11 @@ runs:
       shell: bash
       env:
         GITHUB_ACTION_PATH: ${{ github.action_path }}
+    - name: Add execute permissions to action.sh
+      run: chmod +x $GITHUB_ACTION_PATH/action.sh
+      shell: bash
     - name: Deploy resources
-      run: action.sh
+      run: $GITHUB_ACTION_PATH/action.sh
       shell: bash
       env:
         CLIENT_ID: ${{ inputs.client-id }}
